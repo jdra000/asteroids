@@ -42,7 +42,8 @@ def main():
 
         screen.fill(solid_black)
 
-        for object in drawable:    
+        for object in drawable:
+            print(object)
             object.draw(screen)
 
 
