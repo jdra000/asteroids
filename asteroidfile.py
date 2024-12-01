@@ -2,9 +2,10 @@ import pygame
 import random
 from asteroid import Asteroid
 from constants import *
-
+from groups import asteroids, updatable, drawable
 
 class AsteroidField(pygame.sprite.Sprite):
+    
     edges = [
         [
             pygame.Vector2(1, 0),
@@ -29,12 +30,14 @@ class AsteroidField(pygame.sprite.Sprite):
     ]
 
     def __init__(self):
-        pygame.sprite.Sprite.__init__(self, self.containers)
+        pygame.sprite.Sprite.__init__(self)
         self.spawn_timer = 0.0
 
     def spawn(self, radius, position, velocity):
         asteroid = Asteroid(position.x, position.y, radius)
         asteroid.velocity = velocity
+
+        asteroid.add_groups([asteroids, updatable, drawable])
 
     def update(self, dt):
         self.spawn_timer += dt

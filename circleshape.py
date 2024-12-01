@@ -1,10 +1,7 @@
 import pygame
-from typing import List
 
 # Base class for game objects
 class CircleShape(pygame.sprite.Sprite):
-    # Define what type of data containers hold
-    containers:  List[pygame.sprite.Group] = []
 
     def __init__(self, x, y, radius):
 
@@ -12,10 +9,12 @@ class CircleShape(pygame.sprite.Sprite):
         self.position = pygame.math.Vector2(x, y)
         self.velocity = pygame.math.Vector2(0, 0)
         self.radius = radius
-
+    
+    def add_groups(self, groups):
         # Add instance to each spriteGroup
-        for group in self.containers:
+        for group in groups:
             group.add(self)
+
     def draw(self, screen):
         pass 
     def update(self, dt):
