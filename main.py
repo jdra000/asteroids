@@ -2,7 +2,7 @@ import pygame
 from constants import *
 from player import Player
 from asteroidfile import AsteroidField
-from groups import updatable, drawable, asteroids
+from groups import updatable, drawable, asteroids, shots
 
 def main():
     print('Starting asteroids!')
@@ -29,21 +29,23 @@ def main():
         asteroidField.update(dt)
 
         for object in updatable: 
-            print(object)
             object.update(dt)
-            print(object)
-        
-        for object in asteroids:
-            print(object)
-            if object.check_colission(player):
-                print('yes')
+
+       # Check colission asteroid - player 
+        for asteroid in asteroids:
+            if asteroid.check_colission(player):
                 exit()
-                print('Game Over!')
+            
+        # Check colission asteroid - bullet
+        for asteroid in asteroids:
+            for bullet in shots:
+                if bullet.check_colission(asteroid):
+                    asteroid.split()                  
+                    bullet.kill()
 
         screen.fill(solid_black)
 
         for object in drawable:
-            print(object)
             object.draw(screen)
 
 
