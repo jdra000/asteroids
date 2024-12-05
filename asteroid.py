@@ -20,6 +20,7 @@ class Asteroid(CircleShape):
         vector1, vector2 = self.velocity.rotate(angle), self.velocity.rotate(-angle)
 
         if self.radius == ASTEROID_MIN_RADIUS:
+            self.kill()
             return
         elif self.radius == ASTEROID_MEDIUM_RADIUS:
             asteroid1 = Asteroid(self.position.x,self.position.y, ASTEROID_MIN_RADIUS)
