@@ -4,16 +4,24 @@ from player import Player
 from asteroidfile import AsteroidField
 from groups import updatable, drawable, asteroids, shots
 
+pygame.font.init()
+
 def main():
     print('Starting asteroids!')
     print(f'Screen width: {SCREEN_WIDTH}')
     print(f'Screen height: {SCREEN_HEIGHT}')
 
+    # Set Width and Height
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-    solid_black = (18, 15, 15)
 
+    # Set colors
+    solid_black = (18, 15, 15)
+    white = (255, 255, 255)
+
+    font = pygame.font.SysFont("Arial", 26)
     clock = pygame.time.Clock()
     dt = 0
+    score = 0
     
     player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
     player.add_groups([updatable, drawable])
@@ -22,10 +30,11 @@ def main():
 
     while True:
 
-        for event in pygame.event.get(): # check if the user has closed the window
+        for event in pygame.event.get(): # Check if the user has closed the window
             if event.type == pygame.QUIT:
                 return
-       # AsteroidField does not inherit from CircleShape so we call it's update method outsie 
+
+       # AsteroidField does not inherit from CircleShape so we call it's update method outside
         asteroidField.update(dt)
 
         for object in updatable: 
@@ -42,8 +51,14 @@ def main():
                 if bullet.check_colission(asteroid):
                     asteroid.split()                  
                     bullet.kill()
+                    if asteroid.displayRadius() == ASTEROID_MIN_RADIUS:
+                        player.score += 1
 
+        # Display Score Text
         screen.fill(solid_black)
+        txtsurf = font.render(f"Current Score: {player.score}", True, white)
+        screen.blit(txtsurf, (6, 6))  # Centered text
+
 
         for object in drawable:
             object.draw(screen)
