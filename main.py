@@ -39,11 +39,6 @@ def main():
 
         for object in updatable: 
             object.update(dt)
-
-       # Check colission asteroid - player 
-        for asteroid in asteroids:
-            if asteroid.check_colission(player):
-                exit()
             
         # Check colission asteroid - bullet
         for asteroid in asteroids:
@@ -51,13 +46,29 @@ def main():
                 if bullet.check_colission(asteroid):
                     asteroid.split()                  
                     bullet.kill()
+
+                    # Logic for player lives and respawns
                     if asteroid.displayRadius() == ASTEROID_MIN_RADIUS:
-                        player.score += 1
+                        player.asteroidsDestroyed.append(asteroid)
+
+                        # Update asteroids destroyed by player
+                        player.updateAsteroidsDestroyed()
+
+        # Check colission asteroid - player 
+        for asteroid in asteroids:
+            if asteroid.check_colission(player) and player.stillAlive():
+
+                # Check for a respawn or die otherwise
+                player.respawns -= 1
+            else:
+                exit()
 
         # Display Score Text
         screen.fill(solid_black)
-        txtsurf = font.render(f"Current Score: {player.score}", True, white)
-        screen.blit(txtsurf, (6, 6))  # Centered text
+        scoreText = font.render(f"Current Score: {player.score}", True, white)
+        respawnText = font.render(f"Respawns Available: {player.respawns}", True, white)
+        screen.blit(scoreText, (6, 6))  # Centered text
+        screen.blit(respawnText, (980, 6))  # Centered text
 
 
         for object in drawable:

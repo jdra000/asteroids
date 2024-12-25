@@ -9,7 +9,9 @@ class Player(CircleShape):
         super().__init__(x, y, PLAYER_RADIUS)
         self.rotation = 0
         self.shoot_timer = 0
+        self.asteroidsDestroyed = []
         self.score = 0
+        self.respawns = 0
     
     def triangle(self):
         forward = pygame.math.Vector2(0, 1).rotate(self.rotation)
@@ -52,6 +54,16 @@ class Player(CircleShape):
     def move(self, dt):
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
         self.position += forward * PLAYER_SPEED * dt
+
+    def updateAsteroidsDestroyed(self):
+        self.score = 0
+        for asteroid in self.asteroidsDestroyed:
+            self.score += 1
+            if len(self.asteroidsDestroyed) % 10 == 0 and self.asteroidsDestroyed != 5:
+                self.respawns = len(self.asteroidsDestroyed) // 10
+
+    def stillAlive(self):
+        return self.respawns
 
 
 
