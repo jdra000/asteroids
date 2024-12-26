@@ -12,10 +12,10 @@ class Player(CircleShape):
         self.shoot_cooldown = 0
         self.multiple_shoot_active = False
         self.multiple_shoot_cooldown = 10
-        
+
         self.asteroidsDestroyed = []
         self.score = 0
-        self.respawns = 1
+        self.respawns = 2
     
     def triangle(self):
         forward = pygame.math.Vector2(0, 1).rotate(self.rotation)
@@ -45,10 +45,6 @@ class Player(CircleShape):
         bullet_vector =  pygame.math.Vector2(0,1).rotate(self.rotation) * PLAYER_SHOT_SPEED*5 # rotate at the player direction 
         bullet.velocity = bullet_vector 
         bullet.add_groups([shots, updatable, drawable])
-
-    def multipleShootCooldown(self):
-        self.multiple_shoot_active = 5
-
         
     def update(self, dt):
         self.shoot_cooldown -= dt

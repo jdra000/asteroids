@@ -34,12 +34,20 @@ def main():
             if event.type == pygame.QUIT:
                 return
 
+        screen.fill(solid_black)
+
        # AsteroidField does not inherit from CircleShape so we call it's update method outside
+       # Generate random asteroids
         asteroidField.update(dt)
 
         for object in updatable: 
             object.update(dt)
-            
+        
+        # Check for player powers
+        if player.multiple_shoot_active:
+            multipleShootText = font.render(f"¡Multiple Shoot Active!", True, white)
+            screen.blit(multipleShootText, (500, 6))  # Centered text
+
         # Check colission asteroid - bullet
         for asteroid in asteroids:
             for bullet in shots:
@@ -51,7 +59,7 @@ def main():
                     if asteroid.displayRadius() == ASTEROID_MIN_RADIUS:
                         player.asteroidsDestroyed.append(asteroid)
 
-                        # Update asteroids destroyed by player
+                        # Update player score
                         player.updateAsteroidsDestroyed()
 
         # Check colission asteroid - player 
@@ -68,7 +76,6 @@ def main():
                 exit()
 
         # Display Score Text
-        screen.fill(solid_black)
         scoreText = font.render(f"Current Score: {player.score}", True, white)
         respawnText = font.render(f"Respawns Available: {player.respawns}", True, white)
         screen.blit(scoreText, (6, 6))  # Centered text
