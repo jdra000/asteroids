@@ -56,11 +56,15 @@ def main():
 
         # Check colission asteroid - player 
         for asteroid in asteroids:
-            if asteroid.check_colission(player) and player.stillAlive():
 
-                # Check for a respawn or die otherwise
+            # Check for a respawn or die otherwise
+            if asteroid.check_colission(player) and player.respawns:
                 player.respawns -= 1
-            else:
+                asteroid.reset()
+
+            elif asteroid.check_colission(player):
+                playerDead = font.render(f"Your score was: {player.score}\n. Press space to restart.", True, white)
+                screen.blit(playerDead, (6, 6))  # Centered text
                 exit()
 
         # Display Score Text

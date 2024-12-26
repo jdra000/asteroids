@@ -8,10 +8,14 @@ class Player(CircleShape):
     def __init__(self, x, y): 
         super().__init__(x, y, PLAYER_RADIUS)
         self.rotation = 0
-        self.shoot_timer = 0
+
+        self.shoot_cooldown = 0
+        self.multiple_shoot_active = False
+        self.multiple_shoot_cooldown = 10
+        
         self.asteroidsDestroyed = []
         self.score = 0
-        self.respawns = 0
+        self.respawns = 1
     
     def triangle(self):
         forward = pygame.math.Vector2(0, 1).rotate(self.rotation)
@@ -28,17 +32,36 @@ class Player(CircleShape):
         self.rotation += dt * PLAYER_TURN_SPEED 
 
     def shoot(self):
-        if self.shoot_timer <= 0:
+        if self.shoot_cooldown <= 0:
             bullet = Shot(self.position.x, self.position.y) 
-            bullet_vector =  pygame.math.Vector2(0,1).rotate(self.rotation) * PLAYER_SHOOT_SPEED # rotate at the player direction 
+            bullet_vector =  pygame.math.Vector2(0,1).rotate(self.rotation) * PLAYER_SHOT_SPEED # rotate at the player direction 
             bullet.velocity = bullet_vector 
             bullet.add_groups([shots, updatable, drawable])
-        
-            self.shoot_timer = PLAYER_SHOOT_COOLDOWN        
 
+            self.shoot_cooldown = PLAYER_SHOOT_COOLDOWN
+
+    def multipleShoot(self):
+        bullet = Shot(self.position.x, self.position.y) 
+        bullet_vector =  pygame.math.Vector2(0,1).rotate(self.rotation) * PLAYER_SHOT_SPEED*5 # rotate at the player direction 
+        bullet.velocity = bullet_vector 
+        bullet.add_groups([shots, updatable, drawable])
+
+    def multipleShootCooldown(self):
+        self.multiple_shoot_active = 5
+
+        
     def update(self, dt):
+        self.shoot_cooldown -= dt
+        self.multiple_shoot_cooldown -= dt
+
+        if self.multiple_shoot_cooldown >=0 and self.multiple_shoot_cooldown <= 5 :
+            self.multiple_shoot_active = True
+
+        if self.multiple_shoot_cooldown <= 0:
+            self.multiple_shoot_cooldown = 10
+            self.multiple_shoot_active = False
+
         keys = pygame.key.get_pressed()
-        self.shoot_timer -= dt
 
         if keys[pygame.K_a]:
             self.rotate(-dt)
@@ -48,8 +71,12 @@ class Player(CircleShape):
             self.move(-dt)
         elif keys[pygame.K_w]:
             self.move(dt)
+        # Normal shooting
         elif keys[pygame.K_SPACE]:
             self.shoot()
+        # Multiple shooting
+        elif self.multiple_shoot_active and keys[pygame.K_m]:
+            self.multipleShoot()
 
     def move(self, dt):
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
@@ -59,11 +86,6 @@ class Player(CircleShape):
         self.score = 0
         for asteroid in self.asteroidsDestroyed:
             self.score += 1
-            if len(self.asteroidsDestroyed) % 10 == 0 and self.asteroidsDestroyed != 5:
-                self.respawns = len(self.asteroidsDestroyed) // 10
-
-    def stillAlive(self):
-        return self.respawns
 
 
 

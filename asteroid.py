@@ -46,3 +46,6 @@ class Asteroid(CircleShape):
 
         self.kill()
 
+    def reset(self):
+        for asteroid in asteroids:
+            asteroid.kill()
