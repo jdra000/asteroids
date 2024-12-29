@@ -14,6 +14,8 @@ class CircleShape(pygame.sprite.Sprite):
         # Add instance to each spriteGroup
         for group in groups:
             group.add(self)
+    def remove_from_group(self, group):
+        group.remove(self)
 
     def draw(self, screen):
         pass 

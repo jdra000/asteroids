@@ -15,7 +15,7 @@ class Player(CircleShape):
 
         self.asteroidsDestroyed = []
         self.score = 0
-        self.respawns = 2
+        self.respawns = PLAYER_RESPAWNS
     
     def triangle(self):
         forward = pygame.math.Vector2(0, 1).rotate(self.rotation)
@@ -50,6 +50,7 @@ class Player(CircleShape):
         self.shoot_cooldown -= dt
         self.multiple_shoot_cooldown -= dt
 
+        # Logic for multiple shoot active - disactive
         if self.multiple_shoot_cooldown >=0 and self.multiple_shoot_cooldown <= 5 :
             self.multiple_shoot_active = True
 
@@ -57,6 +58,7 @@ class Player(CircleShape):
             self.multiple_shoot_cooldown = 10
             self.multiple_shoot_active = False
 
+        # Logic for keys
         keys = pygame.key.get_pressed()
 
         if keys[pygame.K_a]:
@@ -82,6 +84,11 @@ class Player(CircleShape):
         self.score = 0
         for asteroid in self.asteroidsDestroyed:
             self.score += 1
+
+    def reset(self):
+        self.asteroidsDestroyed = []
+        self.score = 0
+        self.respawns = PLAYER_RESPAWNS
 
 
 

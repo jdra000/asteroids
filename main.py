@@ -11,6 +11,8 @@ def main():
     print(f'Screen width: {SCREEN_WIDTH}')
     print(f'Screen height: {SCREEN_HEIGHT}')
 
+    gameOver = False
+
     # Set Width and Height
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
@@ -21,7 +23,6 @@ def main():
     font = pygame.font.SysFont("Arial", 26)
     clock = pygame.time.Clock()
     dt = 0
-    score = 0
     
     player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
     player.add_groups([updatable, drawable])
@@ -46,7 +47,7 @@ def main():
         # Check for player powers
         if player.multiple_shoot_active:
             multipleShootText = font.render(f"¡Multiple Shoot Active!", True, white)
-            screen.blit(multipleShootText, (500, 6))  # Centered text
+            screen.blit(multipleShootText, (500, 6))  # Text position
 
         # Check colission asteroid - bullet
         for asteroid in asteroids:
@@ -55,11 +56,9 @@ def main():
                     asteroid.split()                  
                     bullet.kill()
 
-                    # Logic for player lives and respawns
+                    # Update player score
                     if asteroid.displayRadius() == ASTEROID_MIN_RADIUS:
                         player.asteroidsDestroyed.append(asteroid)
-
-                        # Update player score
                         player.updateAsteroidsDestroyed()
 
         # Check colission asteroid - player 
@@ -71,15 +70,28 @@ def main():
                 asteroid.reset()
 
             elif asteroid.check_colission(player):
-                playerDead = font.render(f"Your score was: {player.score}\n. Press space to restart.", True, white)
-                screen.blit(playerDead, (6, 6))  # Centered text
-                exit()
+                # Stop game (player - asteroids) position
+                for asteroid in asteroids:
+                    asteroid.remove_from_group(updatable)
+                player.remove_from_group(updatable)
+
+                playerDead = font.render(f"Congrats, your score was: {player.score}. Press space to exit, r to restart.", True, white)
+                screen.blit(playerDead, (300, 300))  # Centered text
+
+                keys = pygame.key.get_pressed()
+                if keys[pygame.K_SPACE]:
+                    exit()
+                elif keys[pygame.K_r]:
+                    # Resume game 
+                    player.add_groups([updatable, drawable])
+                    asteroid.reset()
+                    player.reset()
 
         # Display Score Text
         scoreText = font.render(f"Current Score: {player.score}", True, white)
         respawnText = font.render(f"Respawns Available: {player.respawns}", True, white)
-        screen.blit(scoreText, (6, 6))  # Centered text
-        screen.blit(respawnText, (980, 6))  # Centered text
+        screen.blit(scoreText, (6, 6))  # Text position
+        screen.blit(respawnText, (980, 6))  # Text position
 
 
         for object in drawable:
