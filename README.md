@@ -1,6 +1,6 @@
 Asteroids retro game implemented with the `pygame` library. 
 
-To move use `w`, `a`, `s`, `d`. Every almost 8 seconds multiple shooting becomes available (press `m` to use that power) and if you die, 3 respawns will keep you alive. Your score depends on destroying only little asteroids not the bigger ones. 
+Move with `w`, `a`, `s`, `d`. Every almost 8 seconds multiple shooting becomes available pressing `m`. If you die, 3 respawns will keep you alive. Your score depends on destroying only little asteroids not the bigger ones. 
 
 Before running the game, you'll need to install the required dependencies. It is recommended to use a virtual environment (venv) to keep your dependencies isolated.
 
